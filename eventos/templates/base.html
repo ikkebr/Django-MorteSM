@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Mortes em Santa Maria</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- TODO: make sure bootstrap.min.css points to BootTheme generated file
+        -->
+		
+    <link href="http://bootswatch.com/spacelab/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        body {
+            padding-top: 20px;
+            padding-bottom: 40px;
+        }
+        /* Custom container */
+        .container-narrow {
+            margin: 0 auto;
+            max-width: 700px;
+        }
+        .container-narrow > hr {
+            margin: 30px 0;
+        }
+        /* Main marketing message and sign up button */
+        .jumbotron {
+            text-align: center;
+        }
+        .jumbotron h1 {
+            font-size: 72px;
+            line-height: 1;
+        }
+        .jumbotron .btn {
+            font-size: 21px;
+            padding: 14px 24px;
+        }
+        /* Supporting marketing content */
+        .marketing {
+            margin: 60px 0;
+        }
+        .marketing p + h4 {
+            margin-top: 28px;
+        }
+
+	a {
+		color: #de1b1b !important; 
+	}
+
+	a:hover, a:focus {
+		color: #de1b1b !important;
+		text-decoration: underline;
+	}
+
+	.nav-pills>li.active>a {
+		background-color: #de1b1b !important;
+		color: white !important;
+	}
+    </style>
+    <!-- TODO: make sure bootstrap-responsive.min.css points to BootTheme
+        generated file -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    <!-- Fav and touch icons -->
+    <link rel="shortcut icon" href="../assets/ico/favicon.ico">
+
+	
+	{% block extras %}{% endblock %}
+</head>
+
+<body onload="initialize();">
+    <div class="container-narrow">
+        <div class="masthead">
+            <ul class="nav nav-pills pull-right">
+                <li class="active">
+                    <a href="#">Principal</a>
+                </li>
+                <li>
+                    <a href="#">Sobre</a>
+                </li>
+                <li>
+                    <a href="#">Contato</a>
+                </li>
+            </ul>
+            <h3 class="muted">Mortes em Santa Maria</h3>
+
+        </div>
+    </div>
+
+
+        <div class="jumbotron1">
+	<hr>
+            {% block content %}{% endblock %}
+	<hr>
+        </div>
+
+   <div class="container-narrow">
+        <div class="row-fluid marketing">
+		{% block description %}{% endblock %}
+        </div>
+
+        <hr>
+        <div class="row-fluid marketing">
+		{% block stats %}{% endblock %}
+        </div>
+
+        <hr>
+        <div class="footer">
+            <p>Santa Maria, 2014.</p>
+        </div>
+    </div>
+    <!-- /container -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+    </script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+</body>
+
+</html>

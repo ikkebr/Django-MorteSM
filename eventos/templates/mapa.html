@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+
+{% block extras %}
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=YOURGOOGLEAPIKEY&sensor=true"></script>
+    <script type="text/javascript">
+
+
+var map;
+var eventos = {};
+  function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(-29.684167,-53.806944),
+          zoom: 12,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        
+        map = new google.maps.Map(document.getElementById("map_canvas"),
+            mapOptions);
+
+
+
+
+{% for cada in eventos %}
+	eventos[{{cada.id}}] = { evento: '{{cada.titulo}}',
+                             tipo: '{{cada.tipo}}', 
+                             data: '{{ cada.data }}',
+                             vitimas: {{ cada.vitima_set.all.count }},
+                             marker: 	placeMarker(new google.maps.LatLng({{ cada.posicao.y }}, {{ cada.posicao.x }})
+)
+};
+
+
+{% endfor %}
+
+for(id in eventos){
+	attachInfo(eventos[id].marker, id);
+}
+
+
+      }
+
+function attachInfo(marker, id){
+	var infowindow = new google.maps.InfoWindow({
+		content: "<strong>" + eventos[id].evento +" </strong><br/>Data: " + eventos[id].data + "<br/>Vítimas: " + eventos[id].vitimas});
+
+	google.maps.event.addListener(marker, 'click', function() {
+	    infowindow.open(marker.get('map'), marker);
+	    eventos[id].marker.setIcon("/static/shooting-blue.png");
+
+	 });
+
+        google.maps.event.addListener(infowindow, 'closeclick', function(){
+	    marker.setIcon("/static/shooting.png"); 
+	});
+}
+
+function placeMarker(location) {
+  var marker = new google.maps.Marker({
+      position: location,
+      map: map,
+      icon: "/static/shooting.png"
+  });
+
+ // map.setCenter(location);
+
+ return marker;
+}
+
+
+function showMarker(id){
+  google.maps.event.trigger(eventos[id].marker,'click');
+}
+
+</script>
+{% endblock %} 
+
+{% block content %}
+
+    <div id="map_canvas" style="width:100%; height:500px;"></div>
+
+{% endblock %}
+
+
+{% block description %}
+<div class="span12">
+	<h2>Relat&oacute;rio de Assassinatos - 2014</h2>
+	{% for evento in eventos %}
+		<h4><a href="#" onclick="showMarker({{evento.id}});" data-id="{{evento.id}}"><img src='static/shooting-blue.png' /> {{ evento.titulo }} - {{ evento.data|date:"d/m/Y" }}</a></h4>
+		<h5>{{ evento.data|naturaltime }} - {{ evento.vitima_set.all.count|apnumber|capfirst }} morto{{ evento.vitima_set.all.count|pluralize }}</h5>
+		<ul>
+			{% for ref in evento.registro_set.all %}
+				<li><a href='{{ ref }}'> {{ ref }} </a></li>
+			{% endfor %}
+		</ul>
+		{% if not forloop.last %}<hr/>{% endif %}
+	{% endfor %}
+</div>
+{% endblock %}
+
+
+{% block stats %}
+<div class=".col-xs-6">
+<h1>Dados</h1>
+<p>Em <strong>{{ taxa.3|floatformat:"0" }} dias</strong> ocorreram <strong>{{ taxa.2 }} assassinatos</strong>. Se levarmos essa m&eacute;dia em considera&ccedil;&atilde;o teremos um total de <strong>{{ taxa.1|floatformat:"0" }} assassinatos ao final do ano</strong>.</p>
+<p>Isso equivale a uma taxa de <strong>{{ taxa.0|floatformat:"2" }} assassinatos</strong> para cada 100 mil habitantes.</p>
+</div>
+
+<div class=".col-xs-6">
+<h2>Comparativo</h2>
+
+<p>Agora vamos usar dados da <a href='http://www.unodc.org/documents/data-and-analysis/statistics/crime/Homicide_statistics2013.xls'>ONU</a> para comparar o n&iacute;vel de seguran&ccedil;a de Santa Maria com o resto do mundo:</p>
+<table class="table table-bordered">
+
+<thead>
+	<th>Pa&iacute;s</th>
+	<th>Taxa</th>
+	<th>Regi&atilde;o</th>
+</thead>
+
+<tbody>
+{% for cada in paises_menores %}
+<tr>
+	<td class="{% if cada.rate < 10 %}success{%elif cada.rate < 30%}warning{% else %}danger{% endif %} ">{{ cada.nome }}</td>
+	<td class="{% if cada.rate < 10 %}success{%elif cada.rate < 30%}warning{% else %}danger{% endif %} ">{{ cada.rate }}</td>
+	<td class="{% if cada.rate < 10 %}success{%elif cada.rate < 30%}warning{% else %}danger{% endif %} ">{{ cada.continente }}</td>
+</tr>
+{% endfor %}
+
+<tr>
+	<td><strong>&rarr; Santa Maria</strong></td>
+	<td><strong>{{ taxa.0|floatformat:"2" }}</strong></td>
+	<td><strong>Brasil</strong></td>
+</tr>
+
+{% for cada in paises_maiores %}
+<tr>
+	<td class="{% if cada.rate < 10 %}success{%elif cada.rate < 30%}warning{% else %}danger{% endif %} ">{{ cada.nome }}</td>
+	<td class="{% if cada.rate < 10 %}success{%elif cada.rate < 30%}warning{% else %}danger{% endif %} ">{{ cada.rate }}</td>
+	<td class="{% if cada.rate < 10 %}success{%elif cada.rate < 30%}warning{% else %}danger{% endif %} ">{{ cada.continente }}</td>
+</tr>
+{% endfor %}
+</tbody>
+
+</table>
+
+</div>
+{% endblock %}
